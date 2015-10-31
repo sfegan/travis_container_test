@@ -28,4 +28,3 @@ script:
   - swig -version
   - cmake -version
   - $CC -v
-- echo Finished
