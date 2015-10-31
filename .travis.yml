@@ -15,13 +15,14 @@ addons:
 before_install:
   - CC="gcc-4.8"
   - CXX="g++-4.8"
-  - PATH=$HOME/local/bin:$PATH
+  - LOCAL=$HOME/local-$CC
+  - PATH=$LOCAL:$PATH
   - wget http://sourceforge.net/projects/swig/files/swig/swig-3.0.7/swig-3.0.7.tar.gz
   - tar zxf swig-3.0.7.tar.gz
-  - ( cd swig-3.0.7 && ./configure --prefix=$HOME/local --without-alllang --with-python && make -j3 && make install )
-#  - wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-1/protobuf-cpp-3.0.0-beta-1.tar.gz
-#  - tar zxf protobuf-cpp-3.0.0-beta-1.tar.gz
-#  - ( cd protobuf-3.0.0-beta-1 && ./configure --prefix=/usr && make -j3 && make install )
+  - ( cd swig-3.0.7 && ./configure --prefix=$LOCAL --without-alllang --with-python && make -j3 && make install )
+  - wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-1/protobuf-cpp-3.0.0-beta-1.tar.gz
+  - tar zxf protobuf-cpp-3.0.0-beta-1.tar.gz
+  - ( cd protobuf-3.0.0-beta-1 && ./configure --prefix=$LOCAL && make -j3 && make install )
 language: cpp
 script:
 #  - mkdir mybuild-travis && cd mybuild-travis
@@ -29,5 +30,7 @@ script:
   - swig -version
   - cmake -version
   - $CC -v
-  - ls -l $HOME/local
+  - ls -l $LOCAL
+  - ls -l $LOCAL/bin
+
 
