@@ -1,11 +1,22 @@
 language: cpp
 sudo: false
 
+compiler:
+  - gcc-4.8
+  - gcc-5
+  - clang-3.7
+
+env:
+  - TEST="all"
+  - TEST="some"
+  - TEST="none"
+  
 addons:
   apt:
     sources:
     - george-edison55-precise-backports
     - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.7
     packages:
     - gsl-bin
     - libgsl0-dev
@@ -14,59 +25,8 @@ addons:
     - cmake-data
     - python-numpy
     - g++-4.8
-
-cache:
-  directories:
-  - $HOME/local
-
-before_install:
-  - CC="gcc-4.8"
-  - CXX="g++-4.8"
-  - LOCAL=$HOME/local/$CC
-  - PATH=$LOCAL/bin:$PATH
-
-install:
-  - |
-    if [ ! -f $LOCAL/bin/swig ];
-    then (
-      wget http://sourceforge.net/projects/swig/files/swig/swig-3.0.7/swig-3.0.7.tar.gz &&
-      tar zxf swig-3.0.7.tar.gz &&
-      cd swig-3.0.7 &&
-      ./configure --prefix=$LOCAL --without-alllang --with-python &&
-      make -j3 > /dev/null &&
-      make install
-    ); fi 
-  - |
-    if [ ! -f $LOCAL/bin/protoc ];
-    then (
-      wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-1/protobuf-cpp-3.0.0-beta-1.tar.gz &&
-      tar zxf protobuf-cpp-3.0.0-beta-1.tar.gz &&
-      cd protobuf-3.0.0-beta-1 &&
-      ./configure --prefix=$LOCAL &&
-      make -j3 > /dev/null &&
-      make install
-    ); fi
-  - |
-    if [ ! -f $LOCAL/bin/geant4.sh ];
-    then (
-      wget http://geant4.cern.ch/support/source/geant4.10.01.p02.tar.gz &&
-      tar zxf geant4.10.01.p02.tar.gz &&
-      cd geant4.10.01.p02 &&
-      mkdir mybuild &&
-      cd mybuild &&
-      cmake -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$LOCAL .. &&
-      make -j3 > /dev/null &&
-      make install
-    ); fi
+    - g++-5
+    - clang-3.7
 
 script:
-#  - mkdir mybuild-travis && cd mybuild-travis
-#  - cmake -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=build .. && make -j3 && make install && make test
-  - swig -version
-  - cmake -version
-  - $CC -v
-  - ls -l $LOCAL
-  - ls -l $LOCAL/bin
-  - ls -l $LOCAL/lib
-
-
+  - env
